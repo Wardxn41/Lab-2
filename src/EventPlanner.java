@@ -16,8 +16,8 @@ public class EventPlanner {
 
     static void addDefaultEvents(EventListPanel events) {
         // Add some default events (Deadline and Meeting)
-        // events.addEvent(new Deadline("Sample Deadline", LocalDateTime.of(2025, 3, 1, 12, 0)));
-        // events.addEvent(new Meeting("Sample Meeting", LocalDateTime.of(2025, 2, 20, 10, 0),
-               // LocalDateTime.of(2000, 2, 20, 11, 0), "Zoom"));
+        events.addEvent(new Deadline("Sample Deadline", LocalDateTime.of(2025, 3, 1, 12, 0)));
+        events.addEvent(new Meeting("Sample Meeting", LocalDateTime.of(2025, 2, 20, 10, 0),
+               LocalDateTime.of(2000, 2, 20, 11, 0), "Zoom"));
     }
 }

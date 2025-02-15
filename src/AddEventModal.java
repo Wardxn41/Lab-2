@@ -11,6 +11,9 @@ public class AddEventModal extends JDialog {
     private JButton addButton;
     private JComboBox<String> eventTypeComboBox;
     private EventListPanel eventListPanel;  // To update the list of events after adding
+    private JPanel panel; // The main panel to hold the input fields
+    private JPanel locationPanel; // The panel containing the location input field
+    private JLabel locationLabel; // Label for the location field
 
     public AddEventModal() {
         setTitle("Add New Event");
@@ -19,7 +22,7 @@ public class AddEventModal extends JDialog {
         setModal(true);  // Make this a modal dialog
 
         // Create panel for input fields
-        JPanel panel = new JPanel();
+        panel = new JPanel();
         panel.setLayout(new GridLayout(6, 2));  // Grid layout for easy organization of fields
 
         // Event Type Dropdown (e.g., Meeting, Deadline)
@@ -37,10 +40,14 @@ public class AddEventModal extends JDialog {
         dateSpinner = createDateTimeSpinner();
         panel.add(dateSpinner);
 
-        // Location (only for meetings)
-        panel.add(new JLabel("Location:"));
+        // Location label and location field (only for meetings)
+        locationLabel = new JLabel("Location:");
+        panel.add(locationLabel); // Add the location label to the panel
         locationField = new JTextField();
-        panel.add(locationField);
+        locationPanel = new JPanel(); // To hold the location input field
+        locationPanel.setLayout(new BorderLayout());
+        locationPanel.add(locationField, BorderLayout.CENTER);
+        panel.add(locationPanel); // Add the location panel to the main panel
 
         // Add button
         addButton = new JButton("Add Event");
@@ -49,6 +56,12 @@ public class AddEventModal extends JDialog {
         // Add the panel and button to the dialog
         add(panel, BorderLayout.CENTER);
         add(addButton, BorderLayout.SOUTH);
+
+        // Add listener to handle event type changes
+        eventTypeComboBox.addActionListener(e -> updateLocationFieldVisibility());
+
+        // Initialize the visibility of the location field based on the default event type
+        updateLocationFieldVisibility();
     }
 
     private JSpinner createDateTimeSpinner() {
@@ -58,6 +71,24 @@ public class AddEventModal extends JDialog {
         JSpinner.DateEditor editor = new JSpinner.DateEditor(spinner, "yyyy-MM-dd HH:mm:ss");
         spinner.setEditor(editor);
         return spinner;
+    }
+
+    private void updateLocationFieldVisibility() {
+        // Get the selected event type from the combo box
+        String selectedEventType = (String) eventTypeComboBox.getSelectedItem();
+
+        // If it's a "Meeting", show the location label and field, else hide them (for "Deadline")
+        if ("Meeting".equals(selectedEventType)) {
+            locationLabel.setVisible(true);
+            locationPanel.setVisible(true);
+        } else {
+            locationLabel.setVisible(false);
+            locationPanel.setVisible(false);
+        }
+
+        // Revalidate the panel to reflect the visibility changes
+        revalidate();
+        repaint();
     }
 
     private void addEvent() {
